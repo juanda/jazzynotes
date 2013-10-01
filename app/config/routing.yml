@@ -1,0 +1,5 @@
+jazzyweb_notes_frontend:
+    resource: "@JazzywebNotesFrontendBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
