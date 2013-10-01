@@ -6,7 +6,7 @@
 
     <!--
     <parameters>
-        <parameter key="jazzyweb_notes_frontend.example.class">Jazzyweb\NotesFrontendBundle\Example</parameter>
+        <parameter key="jazzyweb_notes_frontend.example.class">Jazzyweb\NotasFrontendBundle\Example</parameter>
     </parameters>
 
     <services>

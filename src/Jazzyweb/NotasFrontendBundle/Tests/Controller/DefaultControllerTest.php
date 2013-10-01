@@ -1,6 +1,6 @@
 <?php
 
-namespace Jazzyweb\NotesFrontendBundle\Tests\Controller;
+namespace Jazzyweb\NotasFrontendBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
