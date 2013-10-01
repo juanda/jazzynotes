@@ -294,7 +294,7 @@ class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterfac
      *
      * @param Jazzyweb\NotasFrontendBundle\Entity\Nota $notas
      */
-    public function addNota(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Nota $notas) {
+    public function addNota(\Jazzyweb\NotasFrontendBundle\Entity\Nota $notas) {
         $this->notas[] = $notas;
     }
 
@@ -310,9 +310,9 @@ class Usuario implements AdvancedUserInterface, \Serializable, EquatableInterfac
     /**
      * Add contratos
      *
-     * @param Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Contrato $contratos
+     * @param Jazzyweb\NotasFrontendBundle\Entity\Contrato $contratos
      */
-    public function addContrato(\Jazzyweb\AulasMentor\NotasFrontendBundle\Entity\Contrato $contratos) {
+    public function addContrato(\Jazzyweb\NotasFrontendBundle\Entity\Contrato $contratos) {
         $this->contratos[] = $contratos;
     }
 

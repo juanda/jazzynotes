@@ -19,7 +19,8 @@
         "sensio/framework-extra-bundle": "2.3.*",
         "sensio/generator-bundle": "2.3.*",
         "incenteev/composer-parameter-handler": "~2.0",
-        "nelmio/alice": "1.5.*"
+        "nelmio/alice": "1.5.*",
+        "raulfraile/ladybug-bundle": "v0.7"
     },
     "scripts": {
         "post-install-cmd": [

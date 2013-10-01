@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Jazzyweb\NotasFrontendBundle\Entity\Etiqueta
  *
  * @ORM\Table(name="etiquetas")
- * @ORM\Entity(repositoryClass="Jazzyweb\EtiquetaRepository")
+ * @ORM\Entity(repositoryClass="Jazzyweb\NotasFrontendBundle\Entity\EtiquetaRepository")
  */
 class Etiqueta
 {
@@ -98,7 +98,7 @@ class Etiqueta
     /**
      * Set usuario
      *
-     * @param Jazzyweb\AulasMentor\Usuario $usuario
+     * @param Jazzyweb\NotasFrontendBundle\Entity\Usuario $usuario
      */
     public function setUsuario(\Jazzyweb\NotasFrontendBundle\Entity\Usuario $usuario)
     {
