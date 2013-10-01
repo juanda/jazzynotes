@@ -1,0 +1,90 @@
+Jazzyweb\NotasFrontendBundle\Entity\Grupo:
+  grupo1:
+     nombre: invitado
+     rol: ROLE_GUESS
+  grupo2:
+     nombre: registrado
+     rol: ROLE_REGISTERED
+
+  grupo3:
+     nombre: administrador
+     rol: ROLE_ADMIN
+
+Jazzyweb\NotasFrontendBundle\Entity\Usuario:
+  usuario{1..5}:
+     username (unique): <username()>
+     nombre: <firstname()>
+     apellidos: <lastname()>
+     email: <email()>
+     password: pruebas
+     isActive: 1
+     grupos: [@grupo1]
+
+  usuario{6..10}:
+     username (unique): <username()>
+     nombre: <firstname()>
+     apellidos: <lastname()>
+     email: <email()>
+     password: pruebas
+     isActive: 1
+     grupos: [@grupo2]
+
+  usuario{11..12}:
+     username (unique): <username()>
+     nombre: <firstname()>
+     apellidos: <lastname()>
+     email: <email()>
+     password: pruebas
+     isActive: 1
+     grupos: [@grupo3]
+
+Jazzyweb\NotasFrontendBundle\Entity\Etiqueta:
+   etiqueta{1..100}:
+      texto: <word()>
+
+Jazzyweb\NotasFrontendBundle\Entity\Nota:
+   nota{1..5}:
+      usuario: @usuario1
+      titulo: <sentence($nbWords = 4)>
+      texto: <text()>
+      fecha: <datetime()>
+      etiquetas (unique): [@etiqueta*,@etiqueta*]
+
+   nota{6..15}:
+      usuario: @usuario2
+      titulo: <sentence($nbWords = 4)>
+      texto: <text()>
+      fecha: <datetime()>
+      etiquetas (unique): [@etiqueta*,@etiqueta*, @etiqueta*]
+
+   nota{16..30}:
+      usuario: @usuario3
+      titulo: <sentence($nbWords = 4)>
+      texto: <text()>
+      fecha: <datetime()>
+      etiquetas (unique): [@etiqueta*]
+
+
+
+Jazzyweb\NotasFrontendBundle\Entity\Tarifa:
+   tarifa1:
+      nombre: básica
+      periodo: 3
+      precio: 30
+   tarifa2:
+      nombre: premium
+      periodo: 3
+      precio: 60
+
+Jazzyweb\NotasFrontendBundle\Entity\Contrato:
+   contrato{1..5}:
+      tarifa: @tarifa*
+      usuario (unique): @usuario*
+      fecha: <datetime()>
+      referencia: <md5()>
+
+Jazzyweb\NotasFrontendBundle\Entity\Banner:
+   banner{1..100}:
+      nombre: <sentence($nbWords = 4)>
+      texto: <text()>
+
