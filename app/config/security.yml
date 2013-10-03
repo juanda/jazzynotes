@@ -18,22 +18,26 @@ security:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        login:
-            pattern:  ^/demo/secured/login$
-            security: false
+        jamn_area_publica:
+             pattern: ^/(registro|activar|tarifas|contratar|login$)
+             security: false
 
-        secured_area:
-            pattern:    ^/demo/secured/
-            form_login:
-                check_path: _security_check
-                login_path: _demo_login
-            logout:
-                path:   _demo_logout
-                target: _demo
-            #anonymous: ~
-            #http_basic:
-            #    realm: "Secured Demo Area"
+        jamn_area_protegida:
+             pattern: ^/
+             anonymous: ~
+             provider: in_memory
+             http_basic:
+                realm: "Secured Demo Area"
+
+#             form_login:
+#                login_path:  /notas/login
+#                check_path:  /notas/login_check
+
+#        logout:
+#             path:   /logout
+#             target: /
 
     access_control:
-        - { path: ^/demo/secured/hello/admin/, roles: ROLE_ADMIN }
-        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/notas/miespacio, roles: ROLE_PREMIUM }
+        - { path: ^/notas/administracion, roles: ROLE_ADMIN, requires_channel: https }
+        - { path: ^/notas, roles: ROLE_REGISTRADO }
