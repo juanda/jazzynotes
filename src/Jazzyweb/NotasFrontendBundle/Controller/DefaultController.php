@@ -57,6 +57,14 @@ class DefaultController extends Controller
 
         $usuarios = $queryUsuarios->getResult();
 
+        $queryNotasFecha = $em->createQuery(
+            "SELECT n FROM Jazzyweb\NotasFrontendBundle\Entity\Nota n
+              JOIN n.usuario u
+              WHERE  u.username=:username ORDER BY n.fecha DESC")
+            ->setParameters(array('username' => 'camila66'));
+
+        $notas_1 =  $queryNotasFecha->getResult();
+
         $queryNotasUsuarioEtiquetas = $em->createQuery(
             "SELECT n FROM Jazzyweb\NotasFrontendBundle\Entity\Nota n
              JOIN  n.etiquetas e
@@ -64,15 +72,11 @@ class DefaultController extends Controller
              WHERE e.id = :id_etiqueta and u.username=:username")
             ->setParameters(array('username' => 'camila66', 'id_etiqueta' => 81));
 
-        $notas_1 = $queryNotasUsuarioEtiquetas->getResult();
+        $notas_2 = $queryNotasUsuarioEtiquetas->getResult();
 
-        $queryNotasFecha = $em->createQuery(
-            "SELECT n FROM Jazzyweb\NotasFrontendBundle\Entity\Nota n
-              JOIN n.usuario u
-              WHERE  u.username=:username ORDER BY n.fecha DESC")
-            ->setParameters(array('username' => 'camila66'));
 
-        $notas_2 =  $queryNotasFecha->getResult();
+
+
 
         ld($usuarios);
         ld($notas_1);
@@ -84,21 +88,43 @@ class DefaultController extends Controller
      */
     public function consultasConQueryBuilder(){
 
-        $repository = $this->getDoctrine()->getRepository('JazzywebNotasFrontendBundle:Usuario');
+        $em = $this->getDoctrine()->getManager();
 
-        $queryUsuarios = $repository->createQueryBuilder('u')
+        $queryUsuarios = $em->createQueryBuilder()
+            ->select('u')
+            ->from('JazzywebNotasFrontendBundle:Usuario', 'u')
             ->where('u.nombre LIKE :patron')
             ->setParameter('patron', '%F%')
             ->getQuery();
 
         $usuarios = $queryUsuarios->getResult();
 
-        $queryNotasUsuarioEtiquetas = $repository->createQueryBuilder('n')
+        $queryNotasFecha = $em->createQueryBuilder()
+            ->select('n')
+            ->from('JazzywebNotasFrontendBundle:Nota', 'n')
+            ->leftJoin('n.usuario', 'u')
+            ->where('u.username=:username')
+            ->orderBy('n.fecha','DESC')
+            ->setParameter('username', 'camila66')
+            ->getQuery();
+
+        $notas_1 = $queryNotasFecha->getResult();
+
+        $queryNotasUsuarioEtiquetas = $em->createQueryBuilder()
+            ->select('n')
+            ->from('JazzywebNotasFrontendBundle:Nota', 'n')
+            ->leftJoin('n.etiquetas', 'e')
+            ->leftJoin('n.usuario', 'u')
             ->where('e.id = :id_etiqueta and u.username=:username')
-            ->setParams()
+            ->setParameters(array('id_etiqueta' => 81, 'username' => 'camila66'))
+            ->getQuery();
 
+        $notas_2 = $queryNotasUsuarioEtiquetas->getResult();
 
-        ldd($usuarios);
+        ld($usuarios);
+        ld($notas_1);
+        ldd($notas_2);
+
 
     }
 }

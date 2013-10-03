@@ -29,7 +29,7 @@ Jazzyweb\NotasFrontendBundle\Entity\Usuario:
      isActive: 1
      grupos: [@grupo2]
 
-  usuario{11..12}:
+  usuario{11..15}:
      username (unique): <username()>
      nombre: <firstname()>
      apellidos: <lastname()>
@@ -37,6 +37,15 @@ Jazzyweb\NotasFrontendBundle\Entity\Usuario:
      password: pruebas
      isActive: 1
      grupos: [@grupo3]
+
+ usuario16:
+     usename: alberto
+     nombre: alberto
+     apellidos: einstein
+     email: <email()>
+     password: pruebas
+     isActive: 1
+     grupos: [@grupo1]
 
 Jazzyweb\NotasFrontendBundle\Entity\Etiqueta:
    etiqueta{1..100}:
