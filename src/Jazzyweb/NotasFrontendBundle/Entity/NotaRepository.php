@@ -37,13 +37,13 @@ class NotaRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findByUsuarioOrderedByFecha($usuario)
+    public function findByUsuarioOrderedByFecha($username)
     {
         $query = $this->getEntityManager()->createQuery(
                         "SELECT n FROM Jazzyweb\NotasFrontendBundle\Entity\Nota n
                           JOIN n.usuario u
                           WHERE  u.username=:username ORDER BY n.fecha DESC")
-                ->setParameters(array('username' => $usuario->getUsername()));
+                ->setParameters(array('username' => $username));
 
         return $query->getResult();
     }

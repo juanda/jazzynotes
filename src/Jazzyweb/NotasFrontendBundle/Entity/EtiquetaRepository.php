@@ -12,7 +12,7 @@ class EtiquetaRepository extends EntityRepository {
     public function findByUsuarioOrderedByTexto($username) {
         $query = $this->getEntityManager()->createQuery(
                         "SELECT e FROM Jazzyweb\NotasFrontendBundle\Entity\Etiqueta e
-                      JOIN  e.usuario u where u.id = :username ORDER BY e.texto ASC")
+                      JOIN  e.notas n JOIN n.usuario u where u.username = :username ORDER BY e.texto ASC")
                 ->setParameters(array('username' => $username));
 
         return $query->getResult();
