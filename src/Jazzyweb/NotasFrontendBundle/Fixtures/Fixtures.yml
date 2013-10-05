@@ -1,11 +1,10 @@
 Jazzyweb\NotasFrontendBundle\Entity\Grupo:
   grupo1:
-     nombre: invitado
-     rol: ROLE_GUESS
-  grupo2:
      nombre: registrado
-     rol: ROLE_REGISTERED
-
+     rol: ROLE_REGISTRADO
+  grupo2:
+     nombre: premium
+     rol: ROLE_PREMIUM
   grupo3:
      nombre: administrador
      rol: ROLE_ADMIN
@@ -38,8 +37,8 @@ Jazzyweb\NotasFrontendBundle\Entity\Usuario:
      isActive: 1
      grupos: [@grupo3]
 
- usuario16:
-     usename: alberto
+  usuario16:
+     username: alberto
      nombre: alberto
      apellidos: einstein
      email: <email()>

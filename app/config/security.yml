@@ -1,6 +1,7 @@
 security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
+        Jazzyweb\NotasFrontendBundle\Entity\Usuario: plaintext
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
@@ -12,6 +13,10 @@ security:
                 users:
                     user:  { password: userpass, roles: [ 'ROLE_USER' ] }
                     admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+
+        base_datos:
+           entity: { class: JazzywebNotasFrontendBundle:Usuario, property: username }
+
 
     firewalls:
         dev:
@@ -25,19 +30,20 @@ security:
         jamn_area_protegida:
              pattern: ^/
              anonymous: ~
-             provider: in_memory
-             http_basic:
-                realm: "Secured Demo Area"
+             provider: base_datos
+             form_login:
+                login_path:  /login
+                check_path:  /login_check
 
-#             form_login:
-#                login_path:  /notas/login
-#                check_path:  /notas/login_check
+             logout:
+                path:   /logout
+                target: /
 
-#        logout:
-#             path:   /logout
-#             target: /
+#             provider: in_memory
+#             http_basic:
+#                realm: "Secured Demo Area"
 
     access_control:
-        - { path: ^/notas/miespacio, roles: ROLE_PREMIUM }
-        - { path: ^/notas/administracion, roles: ROLE_ADMIN, requires_channel: https }
-        - { path: ^/notas, roles: ROLE_REGISTRADO }
+        - { path: ^/miespacio, roles: ROLE_PREMIUM }
+        - { path: ^/administracion, roles: ROLE_ADMIN, requires_channel: https }
+        - { path: ^/, roles: ROLE_REGISTRADO }

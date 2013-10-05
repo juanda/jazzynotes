@@ -2,11 +2,15 @@
 
 namespace Jazzyweb\NotasFrontendBundle\Controller;
 
+use Jazzyweb\NotasFrontendBundle\Entity\Etiqueta;
 use Jazzyweb\NotasFrontendBundle\Entity\Nota;
 use Jazzyweb\NotasFrontendBundle\Entity\Usuario;
+use Jazzyweb\NotasFrontendBundle\Form\Type\NotaType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\SecurityContext;
 
 class NotasController extends Controller {
 
@@ -14,6 +18,7 @@ class NotasController extends Controller {
      * @Route("/", name="jamn_homepage")
      * @Route("/conetiqueta/{etiqueta}", name="jamn_conetiqueta")
      * @Route("/buscar", name="jamn_buscar")
+     * @Route("nota/{id}", name="jamn_nota")
      * @Template()
      */
     public function indexAction()
@@ -64,18 +69,53 @@ class NotasController extends Controller {
             );
     }
 
-    /**
-     * @Route("/nota/{id}", name="jamn_nota")
-     */
-    public function notaAction(){
-
-    }
 
     /**
      * @Route("/nueva", name="jamn_nueva")
+     * @Template("JazzywebNotasFrontendBundle:Notas:crearOEditar.html.twig")
      */
     public function nuevaNotaAction(){
 
+        $request = $this->getRequest();
+
+        list($etiquetas, $notas, $nota_seleccionada) = $this->dameEtiquetasYNotas();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $nota = new Nota();
+        $newForm = $this->createForm(new NotaType(), $nota);
+
+        if ($request->getMethod() == "POST") {
+
+            $newForm->bindRequest($request);
+
+            if ($newForm->isValid()) {
+                $usuario = $this->get('security.context')->getToken()->getUser();
+
+                $item = $request->get('item');
+                $this->actualizaEtiquetas($nota, $item['tags'], $usuario);
+
+                $nota->setUsuario($usuario);
+                $nota->setFecha(new \DateTime());
+
+                if ($newForm['file']->getData() != '')
+                    $nota->upload($usuario->getUsername());
+
+                $em->persist($nota);
+
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('jamn_homepage'));
+            }
+        }
+
+        return  array(
+            'etiquetas' => $etiquetas,
+            'notas' => $notas,
+            'nota_seleccionada' => $nota,
+            'new_form' => $newForm->createView(),
+            'edita' => false,
+        );
     }
 
     /**
@@ -96,6 +136,39 @@ class NotasController extends Controller {
      * @Route("/contratar", name="jamn_contratar")
      */
     public function contratarAction(){
+
+    }
+
+    /**
+     * @Route("/login", name="jamn_login")
+     */
+    public function loginAction() {
+        $request = $this->getRequest();
+        $session = $request->getSession();
+
+        // get the login error if there is one
+        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
+            $error = $request->attributes->get(
+                SecurityContext::AUTHENTICATION_ERROR
+            );
+        } else {
+            $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
+            $session->remove(SecurityContext::AUTHENTICATION_ERROR);
+        }
+
+        return $this->render(
+            'JazzywebNotasFrontendBundle:Login:login.html.twig', array(
+                // last username entered by the user
+                'last_username' => $session->get(SecurityContext::LAST_USERNAME),
+                'error' => $error,
+            )
+        );
+    }
+
+    /**
+     * @Route("/login_check", name="jamn_login_check")
+     */
+    public function loginCheck(){
 
     }
 
@@ -152,6 +225,30 @@ class NotasController extends Controller {
         }
 
         return array($etiquetas, $notas, $nota_seleccionada);
+    }
+
+    protected function actualizaEtiquetas($nota, $tags, $usuario) {
+
+        if (count($tags) == 0) {
+            $tags = array();
+        }
+        $em = $this->getDoctrine()->getManager();
+
+        $nota->getEtiquetas()->clear();
+
+        foreach ($tags as $tag) {
+            $etiqueta = $em->getRepository('JazzywebNotasFrontendBundle:Etiqueta')->findOneByTexto($tag);
+
+            if (!$etiqueta instanceof Etiqueta) {
+                $etiqueta = new Etiqueta();
+                $etiqueta->setTexto($tag);
+                $em->persist($etiqueta);
+            }
+
+            $nota->addEtiqueta($etiqueta);
+        }
+
+        $em->flush();
     }
 
 }

@@ -18,10 +18,10 @@ class EtiquetaRepository extends EntityRepository {
         return $query->getResult();
     }
 
-    public function findOneByTextoAndUsuario($tag, $user) {
+    public function findOneByTextoAndUsuario($tag, $username) {
         $query = $this->getEntityManager()->createQuery(
-                        "SELECT e FROM Jazzyweb\NotasFrontendBundle\Entity\Etiqueta e JOIN e.usuario u where u.id = :user_id AND e.texto=:texto")
-                ->setParameters(array('texto' => $tag, 'user_id' => $user->getId()));
+                        "SELECT e FROM Jazzyweb\NotasFrontendBundle\Entity\Etiqueta e JOIN e.usuario u where u.username = :username AND e.texto=:texto")
+                ->setParameters(array('texto' => $tag, 'username' => $username));
 
         $result = $query->getResult();
 
