@@ -87,7 +87,7 @@ class NotasController extends Controller {
 
         if ($request->getMethod() == "POST") {
 
-            $newForm->bindRequest($request);
+            $newForm->bind($request);
 
             if ($newForm->isValid()) {
                 $usuario = $this->get('security.context')->getToken()->getUser();
@@ -122,13 +122,85 @@ class NotasController extends Controller {
      * @Route("/editar/{id}", name="jamn_editar", requirements={"id" = "\d+"})
      */
     public function editarNotaAction(){
+        $request = $this->getRequest();
+        $id = $request->get('id');
+        list($etiquetas, $notas, $nota_seleccionada) = $this->dameEtiquetasYNotas();
 
+        $em = $this->getDoctrine()->getManager();
+
+        $nota = $em->getRepository('JazzywebNotasFrontendBundle:Nota')->find($id);
+
+        if (!$nota) {
+            throw $this->createNotFoundException('No se ha podido encontrar esa nota');
+        }
+
+        $editForm = $this->createForm(new NotaType(), $nota);
+        $deleteForm = $this->createDeleteForm($id);
+
+        if ($this->getRequest()->getMethod() == "POST") {
+
+            $editForm->bind($request);
+
+            if ($editForm->isValid()) {
+                $usuario = $this->get('security.context')->getToken()->getUser();
+
+                $item = $request->get('item');
+                $this->actualizaEtiquetas($nota, $item['tags'], $usuario);
+
+                $nota->setFecha(new \DateTime());
+
+                if ($editForm['file']->getData() != '')
+                    $nota->upload($usuario->getUsername());
+
+                $em->persist($nota);
+
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('jamn_homepage'));
+            }
+        }
+
+        return $this->render('JazzywebNotasFrontendBundle:Notas:crearOEditar.html.twig', array(
+            'etiquetas' => $etiquetas,
+            'notas' => $notas,
+            'nota_seleccionada' => $nota,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            'edita' => true,
+        ));
     }
 
     /**
      * @Route("borrar/{id}", name="jamn_borrar", requirements={"id" = "\d+"})
      */
     public function borrarNotaAction(){
+        $request = $this->getRequest();
+        $session = $this->get('session');
+        $form = $this->createDeleteForm($request->get('id'));
+
+        $form->bind($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('JazzywebNotasFrontendBundle:Nota')->find($request->get('id'));
+
+            if (!$entity) {
+                throw $this->createNotFoundException('Esa nota no existe.');
+            }
+
+            $em->remove($entity);
+            $em->flush();
+
+            $session->set('nota.seleccionada.id', '');
+        }
+
+        return $this->redirect($this->generateUrl('jamn_homepage'));
+    }
+
+    /**
+     * @Route("/miespacio", name="jamn_espacio_premium")
+     */
+    public function miEspacionAction(){
 
     }
 
@@ -190,8 +262,8 @@ class NotasController extends Controller {
         $session = $this->get('session');
         $em = $this->getDoctrine()->getManager();
 
-//        $usuario = $this->get('security.context')->getToken()->getUser();
-        $username = 'abigail79';
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        $username = $usuario->getUsername();
 
         $busqueda_tipo = $session->get('busqueda.tipo');
 

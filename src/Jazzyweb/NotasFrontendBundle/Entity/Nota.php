@@ -214,7 +214,7 @@ class Nota {
 
     protected function getUploadRootDir($usuario = null) {
         // the absolute directory path where uploaded documents should be saved
-        return __DIR__ . '/../../../../../web/' . $this->getUploadDir($usuario);
+        return __DIR__ . '/../../../../web/' . $this->getUploadDir($usuario);
     }
 
     protected function getUploadDir($usuario = null) {

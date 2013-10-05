@@ -48,7 +48,7 @@ Jazzyweb\NotasFrontendBundle\Entity\Usuario:
 
 Jazzyweb\NotasFrontendBundle\Entity\Etiqueta:
    etiqueta{1..100}:
-      texto: <word()>
+      texto (unique): <word()>
 
 Jazzyweb\NotasFrontendBundle\Entity\Nota:
    nota{1..5}:

@@ -25,9 +25,7 @@
     </div>
 
     <div class="signout">
-        {%  set nombre = 'alberto' %}
-        {%  set apellidos = 'einstein' %}
-        <span class="usuario-nombre">{{ nombre }} {{ apellidos }}</span>
+        <span class="usuario-nombre">{{ app.user.nombre }} {{ app.user.apellidos }}</span>
         <a id="btn_salir" class="ui-button ui-button-text-icon-primary usuario-tool salir ui-corner-all" href="{{path('jamn_logout')}}">
             <span class="ui-button-icon-primary ui-icon ui-icon-power"></span>
             <span class="ui-button-text">salir</span></a>
